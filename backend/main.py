@@ -4,12 +4,21 @@ from routes import auth, listings, reservations, notifications
 
 app = FastAPI(title="FoodBridge API")
 
+# Configure CORS properly
+allowed_origins = [
+    "http://localhost:5173",  # Local development
+    "http://localhost:3000",  # Alternative local
+    "https://foodbridge-backend-guhe.onrender.com",  # Your deployed backend (for preflight requests)
+    # Add your deployed frontend URL here when ready
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    max_age=600,
 )
 
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
